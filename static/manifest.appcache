@@ -1,0 +1,8 @@
+CACHE MANIFEST
+# 1557943103820
+
+CACHE:
+/view1
+
+FALLBACK:
+/static/online.html /static/offline.html

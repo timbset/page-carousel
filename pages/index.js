@@ -1,8 +1,11 @@
 import React from 'react';
+import Head from 'next/head';
+import { withRouter } from 'next/router';
 
 import getPages from '../getPages';
 
-const PAGE_CHANGE_TIMEOUT = 1000;
+const REFRESH_TIMEOUT = 10;
+const PAGE_CHANGE_TIMEOUT = 1;
 
 class IndexView extends React.Component {
   static async getInitialProps() {
@@ -17,14 +20,18 @@ class IndexView extends React.Component {
 
     return (
       <>
+        <Head>
+          <meta httpEquiv={'refresh'} content={REFRESH_TIMEOUT} />
+        </Head>
         {this.props.pageUrls.map((url, index) => (
           <iframe
             key={index}
             className={`frame`}
-            style={{ animationDelay: `${PAGE_CHANGE_TIMEOUT * index}ms` }}
+            style={{ animationDelay: `${PAGE_CHANGE_TIMEOUT * index}s` }}
             src={url}
           />
         ))}
+        <iframe className={'status-frame'} src={'/static/online.html'} />
         <style global jsx>{`        
           html, body, #__next {
             margin: 0;
@@ -41,7 +48,14 @@ class IndexView extends React.Component {
             visibility: hidden;
             position: absolute;
             top: 0;
-            animation: keyframe ${PAGE_CHANGE_TIMEOUT * pageCount}ms steps(${pageCount - 1}, end) infinite;
+            animation: keyframe ${PAGE_CHANGE_TIMEOUT * pageCount}s steps(${pageCount - 1}, end) infinite;
+          }
+          
+          .status-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: none;
           }
           
           @keyframes keyframe {
@@ -61,4 +75,4 @@ class IndexView extends React.Component {
   }
 }
 
-export default IndexView;
+export default withRouter(IndexView);
